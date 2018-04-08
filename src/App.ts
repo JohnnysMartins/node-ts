@@ -1,21 +1,39 @@
-import * as express from 'express'
+import * as express from 'express';
+import UsuarioRouter from "./routes/usuario-router";
+import { json, urlencoded } from 'body-parser';
 
 class App {
   public express
+  private router;
+  private endPoint: string;
 
-  constructor () {
-    this.express = express()
-    this.mountRoutes()
+  constructor() {
+    this.endPoint = '/api/v1'
+    this.express = express();
+    this.configMiddlewares()
+      .mountRoutes()
+      .initRoutes();
   }
 
-  private mountRoutes (): void {
-    const router = express.Router()
-    router.get('/', (req, res) => {
+  private configMiddlewares(): this {
+    this.express.use(json());
+    this.express.use(urlencoded({ extended: true }));
+    return this;
+  }
+  private mountRoutes(): this {
+    this.router = express.Router()
+    this.router.get('/', (req, res) => {
       res.json({
         message: 'Hello World!'
       })
     })
-    this.express.use('/', router)
+    return this;
+  }
+
+  private initRoutes(): this {
+    this.express.use(`${this.endPoint}/`, this.router);
+    this.express.use(`${this.endPoint}/usuario`, UsuarioRouter);
+    return this;
   }
 }
 
