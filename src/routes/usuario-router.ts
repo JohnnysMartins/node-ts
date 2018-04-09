@@ -5,9 +5,6 @@ import { UsuarioDao } from '../services/usuario-dao';
 class UsuarioRouter {
 
     private usuarioDao: UsuarioDao;
-    private usuarioMock(): Usuario {
-        return new Usuario('johnnys Martins', 'johnnys.martins@me.com', '123654');
-    }
     public router: express.Router;
 
     constructor() {
