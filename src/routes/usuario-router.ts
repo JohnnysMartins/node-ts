@@ -27,6 +27,7 @@ class UsuarioRouter {
         this.router.get('/', (req, res) => {
             this.usuarioDao.getUsuarios((err, resultado) => {
                 if (err || !resultado.length) {
+                    console.error(err);
                     res.send({ mensagem: "Erro ou buscar usuarios" });
                     return;
                 }

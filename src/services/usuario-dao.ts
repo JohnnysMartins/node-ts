@@ -9,19 +9,19 @@ export class UsuarioDao {
         this.connection = new ConnectionFactory().getConnection();
     }
 
-    public getUsuarios(callback): void{
+    public getUsuarios(callback: (err, result) => void): void{
         this.connection.query('select * from usuarios;', callback);
     }
 
-    public getUsuarioById(id: string, callback): void {
+    public getUsuarioById(id: string, callback: (err, result) => void): void {
         this.connection.query(`select * from usuarios where id = ?;`, id, callback);
     }
 
-    public createUsuario(usuario: Usuario, callback){
+    public createUsuario(usuario: Usuario, callback: (err, result) => void): void{
         this.connection.query('insert into usuarios set ?;', usuario, callback);
     }
 
-    public removeUsuario(id: string, callback): any {
+    public removeUsuario(id: string, callback: (err, result) => void): any {
         this.connection.query('delete from usuarios where id = ?;', id, callback);
     }
 }
