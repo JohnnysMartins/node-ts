@@ -18,6 +18,15 @@ class UsuarioRouter {
 
     private init(): this {
 
+        this.getAllUsers()
+            .getUsersById()
+            .removeUser()
+            .createUser();
+
+        return this;
+    }
+
+    private getAllUsers(): this {
         this.router.get('/', (req, res) => {
             this.usuarioDao.getUsuarios((err, resultado) => {
                 if (err || !resultado.length) {
@@ -27,7 +36,10 @@ class UsuarioRouter {
                 res.send({ usuarios: resultado });
             });
         });
+        return this;
+    }
 
+    private getUsersById(): this {
         this.router.get('/byId/:id', (req, res) => {
             const id = req.params.id;
             this.usuarioDao.getUsuarioById(id, (err, resultado) => {
@@ -35,22 +47,28 @@ class UsuarioRouter {
                     res.send({ mensagem: 'Usuario nao encontrado' });
                     return;
                 }
-                res.send({ usuarios: resultado });
+                res.send({ usuario: resultado });
             });
         });
+        return this;
+    }
 
+    private removeUser(): this {
         this.router.delete('/', (req, res) => {
             const { id } = req.body;
-            this.usuarioDao.removeUsuario(id, (err, result)=>{
+            this.usuarioDao.removeUsuario(id, (err, result) => {
                 if (err || !result.affectedRows) {
                     console.log(err);
-                    res.send({erro: 'Erro ou remover usuario !'});
+                    res.send({ erro: 'Erro ou remover usuario !' });
                     return;
                 }
-                res.send({mensagem: 'Usuario removido com sucesso !'});
+                res.send({ mensagem: 'Usuario removido com sucesso !' });
             });
         });
+        return this;
+    }
 
+    private createUser(): this {
         this.router.post('/', (req, res) => {
             const { nome, email, senha } = req.body;
             const usuario = new Usuario(nome, email, senha);
