@@ -4,12 +4,17 @@ import { Usuario } from "../model/usuario";
 export class UsuarioDao {
 
     private connection: mysql.Connection;
+
     constructor() {
         this.connection = new ConnectionFactory().getConnection();
     }
 
     public getUsuarios(callback): void{
         this.connection.query('select * from usuarios;', callback);
+    }
+
+    public getUsuarioById(id, callback): void {
+        this.connection.query(`select * from usuarios where id = ?`, id, callback);
     }
 
     public createUsuario(usuario: Usuario, callback){
