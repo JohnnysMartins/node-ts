@@ -8,7 +8,7 @@ export class ConnectionFactory {
             host: 'localhost',
             user: 'root',
             password: 'toor',
-            database: 'node-ts'
+            database: 'node_ts'
         });
     }
 }

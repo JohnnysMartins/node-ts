@@ -17,12 +17,18 @@ class UsuarioRouter {
     }
 
     private init(): this {
-        let usuario = this.usuarioMock();
+
         this.router.get('/', (req, res) => {
-            res.json({ usuario: usuario });
+            this.usuarioDao.getUsuarios((err, resultado) => {
+                if (err || !resultado.length) {
+                    res.send({ mensagem: "Erro ou buscar usuarios" });
+                    return;
+                }
+                res.send({ usuarios: resultado });
+            });
         });
 
-        this.router.get('/:id', (req, res) => {
+        this.router.get('/byId/:id', (req, res) => {
             const id = req.params.id;
             this.usuarioDao.getUsuarioById(id, (err, resultado) => {
                 if (err || !resultado.length) {
@@ -33,13 +39,15 @@ class UsuarioRouter {
             });
         });
 
-        this.router.get('/all', (req, res) => {
-            this.usuarioDao.getUsuarios((err, resultado) => {
-                if (err || !resultado.length) {
-                    res.send({ mensagem: "Erro ou buscar usuarios" });
+        this.router.delete('/', (req, res) => {
+            const { id } = req.body;
+            this.usuarioDao.removeUsuario(id, (err, result)=>{
+                if (err || !result.affectedRows) {
+                    console.log(err);
+                    res.send({erro: 'Erro ou remover usuario !'});
                     return;
                 }
-                res.send({ usuarios: resultado });
+                res.send({mensagem: 'Usuario removido com sucesso !'});
             });
         });
 

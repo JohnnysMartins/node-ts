@@ -13,11 +13,15 @@ export class UsuarioDao {
         this.connection.query('select * from usuarios;', callback);
     }
 
-    public getUsuarioById(id, callback): void {
-        this.connection.query(`select * from usuarios where id = ?`, id, callback);
+    public getUsuarioById(id: string, callback): void {
+        this.connection.query(`select * from usuarios where id = ?;`, id, callback);
     }
 
     public createUsuario(usuario: Usuario, callback){
-        this.connection.query('insert into usuarios set ?', usuario, callback);
+        this.connection.query('insert into usuarios set ?;', usuario, callback);
+    }
+
+    public removeUsuario(id: string, callback): any {
+        this.connection.query('delete from usuarios where id = ?;', id, callback);
     }
 }
