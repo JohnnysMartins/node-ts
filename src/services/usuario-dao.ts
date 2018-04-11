@@ -1,6 +1,7 @@
 import { ConnectionFactory } from "./connection-factory";
 import * as mysql from 'mysql';
 import { Usuario } from "../model/usuario";
+
 export class UsuarioDao {
 
     private connection: mysql.Connection;
@@ -10,11 +11,11 @@ export class UsuarioDao {
     }
 
     public getUsuarios(callback: (err, result) => void): void{
-        this.connection.query('select * from usuarios;', callback);
+        this.connection.query('select id, nome, email from usuarios;', callback);
     }
 
     public getUsuarioById(id: string, callback: (err, result) => void): void {
-        this.connection.query(`select * from usuarios where id = ?;`, id, callback);
+        this.connection.query(`select id, nome, email from usuarios where id = ?;`, id, callback);
     }
 
     public createUsuario(usuario: Usuario, callback: (err, result) => void): void{

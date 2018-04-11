@@ -1,4 +1,5 @@
 import * as express from 'express';
+import * as sha1 from "node-sha1";
 import { Usuario } from "../model/usuario";
 import { UsuarioDao } from '../services/usuario-dao';
 
@@ -29,10 +30,11 @@ class UsuarioRouter {
             this.usuarioDao.getUsuarios((err, resultado) => {
                 if (err || !resultado.length) {
                     console.error(err);
-                    res.send({ mensagem: "Erro ou buscar usuarios" });
+                    res.status(404);
+                    res.json({ mensagem: "Erro ou buscar usuarios" });
                     return;
                 }
-                res.send({ usuarios: resultado });
+                res.json({ usuarios: resultado });
             });
         });
         return this;
@@ -43,10 +45,11 @@ class UsuarioRouter {
             const id = req.params.id;
             this.usuarioDao.getUsuarioById(id, (err, resultado) => {
                 if (err || !resultado.length) {
-                    res.send({ mensagem: 'Usuario nao encontrado' });
+                    res.status(404);
+                    res.json({ mensagem: 'Usuario nao encontrado' });
                     return;
                 }
-                res.send({ usuario: resultado });
+                res.json({ usuario: resultado });
             });
         });
         return this;
@@ -58,10 +61,10 @@ class UsuarioRouter {
             this.usuarioDao.removeUsuario(id, (err, result) => {
                 if (err || !result.affectedRows) {
                     console.log(err);
-                    res.send({ erro: 'Erro ou remover usuario !' });
+                    res.json({ erro: 'Erro ou remover usuario !' });
                     return;
                 }
-                res.send({ mensagem: 'Usuario removido com sucesso !' });
+                res.json({ mensagem: 'Usuario removido com sucesso !' });
             });
         });
         return this;
@@ -70,14 +73,15 @@ class UsuarioRouter {
     private createUser(): this {
         this.router.post('/', (req, res) => {
             const { nome, email, senha } = req.body;
-            const usuario = new Usuario(nome, email, senha);
+            const senhaSha1 = sha1(senha);
+            const usuario = new Usuario(nome, email, senhaSha1);
             this.usuarioDao.createUsuario(usuario, (err, resultado) => {
                 if (err) {
                     console.error(err);
-                    res.send({ erro: `Erro ao cadastrar o cliente ${nome}` });
+                    res.json({ erro: `Erro ao cadastrar o cliente ${nome}` });
                     return;
                 }
-                res.send({ mensagem: `Usuario ${nome} cadastrado com sucesso !` });
+                res.json({ mensagem: `Usuario ${nome} cadastrado com sucesso !` });
             });
         });
         return this;
@@ -86,14 +90,15 @@ class UsuarioRouter {
     private updateUser(): this {
         this.router.put('/', (req, res) => {
             const { nome, email, senha, id } = req.body;
-            const usuario = new Usuario(nome, email, senha, id);
+            const senhaSha1 = sha1(senha);
+            const usuario = new Usuario(nome, email, senhaSha1, id);
             this.usuarioDao.updateUsuario(usuario, (err, resultado) => {
                 if (err) {
                     console.error(err);
-                    res.send({ erro: `Erro ao atualizar o cliente ${nome}` });
+                    res.json({ erro: `Erro ao atualizar o cliente ${nome}` });
                     return;
                 }
-                res.send({ mensagem: `Usuario Atualizado com sucesso !` });
+                res.json({ mensagem: `Usuario Atualizado com sucesso !` });
             });
         });
         return this;
