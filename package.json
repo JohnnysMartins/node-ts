@@ -6,9 +6,11 @@
   "scripts": {
     "clean": "rimraf dist",
     "build": "tsc",
+    "server": "node dist/index.js",
     "watch:build": "tsc --watch",
     "watch:server": "nodemon './dist/index.js' --watch './dist'",
-    "start": "npm-run-all clean build --parallel watch:build watch:server --print-label",
+    "dev": "npm-run-all clean build --parallel watch:build watch:server --print-label",
+    "prod": "npm-run-all clean build --parallel server",
     "test": "tsc && mocha dist/**/*.spec.js"
   },
   "author": "Johnnys Martins",
