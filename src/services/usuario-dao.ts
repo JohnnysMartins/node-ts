@@ -21,6 +21,10 @@ export class UsuarioDao {
         this.connection.query('insert into usuarios set ?;', usuario, callback);
     }
 
+    public updateUsuario(usuario: Usuario, callback: (err, result) => void): void{
+        this.connection.query('update usuarios set ? where id = ?;', [usuario, usuario.getId()], callback);
+    }
+
     public removeUsuario(id: string, callback: (err, result) => void): any {
         this.connection.query('delete from usuarios where id = ?;', id, callback);
     }

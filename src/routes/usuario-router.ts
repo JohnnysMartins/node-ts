@@ -18,7 +18,8 @@ class UsuarioRouter {
         this.getAllUsers()
             .getUsersById()
             .removeUser()
-            .createUser();
+            .createUser()
+            .updateUser();
 
         return this;
     }
@@ -38,7 +39,7 @@ class UsuarioRouter {
     }
 
     private getUsersById(): this {
-        this.router.get('/byId/:id', (req, res) => {
+        this.router.get('/:id', (req, res) => {
             const id = req.params.id;
             this.usuarioDao.getUsuarioById(id, (err, resultado) => {
                 if (err || !resultado.length) {
@@ -72,10 +73,27 @@ class UsuarioRouter {
             const usuario = new Usuario(nome, email, senha);
             this.usuarioDao.createUsuario(usuario, (err, resultado) => {
                 if (err) {
-                    res.send({ erro: err });
+                    console.error(err);
+                    res.send({ erro: `Erro ao cadastrar o cliente ${nome}` });
                     return;
                 }
                 res.send({ mensagem: `Usuario ${nome} cadastrado com sucesso !` });
+            });
+        });
+        return this;
+    }
+
+    private updateUser(): this {
+        this.router.put('/', (req, res) => {
+            const { nome, email, senha, id } = req.body;
+            const usuario = new Usuario(nome, email, senha, id);
+            this.usuarioDao.updateUsuario(usuario, (err, resultado) => {
+                if (err) {
+                    console.error(err);
+                    res.send({ erro: `Erro ao atualizar o cliente ${nome}` });
+                    return;
+                }
+                res.send({ mensagem: `Usuario Atualizado com sucesso !` });
             });
         });
         return this;
